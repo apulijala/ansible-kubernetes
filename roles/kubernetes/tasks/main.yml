@@ -1,0 +1,9 @@
+---
+# tasks file for roles/kubernetes
+- name: Configure the yum repository 
+  ansible.builtin.template:
+    src: kubernetes.repo.j2
+    dest: "{{ kubernetes_dir }}/kubernetes.repo"
+    owner: root
+    group: root
+

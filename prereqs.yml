@@ -1,0 +1,27 @@
+- name: hosts
+  hosts: all
+  become: true
+
+  tasks: 
+    - name: Apply SELinux role
+      block:
+        - name: include selinux role.
+          include_role:
+            name: roles/linux-system-roles.selinux
+          vars:
+            selinux_state: disabled
+   
+  # probably setting on ansible facts. that is why rescue is required. 
+      rescue:
+        - name: Check for failure for other reasons than required reboot
+          fail:
+            when: not selinux_reboot_required
+   
+        - name: Restart managed host
+          reboot:
+   
+        - name: Reapply SELinux role to complete changes
+          include_role:
+            name: roles/linux-system-roles.selinux
+   
+

@@ -1,0 +1,6 @@
+[kubernetes_masters]
+kub_master
+
+[kubernetes_workers]
+kub_worker_1
+kub_worker_2

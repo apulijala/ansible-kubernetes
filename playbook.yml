@@ -1,0 +1,10 @@
+- name: hosts
+  hosts: all
+  become: true
+  vars:
+    selinux_state: disabled
+  tasks:
+   - name: Install Kubernetes.
+     include_role:
+       name: roles/kubernetes
+
