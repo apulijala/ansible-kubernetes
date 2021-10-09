@@ -1,0 +1,23 @@
+- name: hosts
+  hosts: all
+  become: true
+
+  tasks: 
+    - name: Create admin group 
+      ansible.builtin.group:
+        name: admin
+        state: present
+
+    - name: Create user student 
+      ansible.builtin.user:
+        name: student
+        shell: /bin/bash
+        groups: admin
+        append: yes
+
+    - name :  Create admin as sudo group. 
+      copy: 
+         content: '%admin        ALL=(ALL)       NOPASSWD: ALL'
+         dest: /etc/sudoers.d/admin
+   
+
