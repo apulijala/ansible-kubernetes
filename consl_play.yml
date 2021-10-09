@@ -1,0 +1,14 @@
+- name: hosts
+  hosts: kub_worker_1
+  become: true
+  tasks:
+    - debug:
+        msg: play1
+
+- name: Include a play after another play
+  import_playbook: prereqs1.yml 
+
+- name: Include a play after another play
+  import_playbook: install_docker_kub.yml
+
+
