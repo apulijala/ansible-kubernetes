@@ -2,8 +2,6 @@
 # kubeadm installation instructions as on
 # https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/
 
-# Add user student and make him sudo user. 
-sudo useradd -G wheel student
 
 sudo cat <<EOF > /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
@@ -22,25 +20,14 @@ sudo sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
 # disable swap (assuming that the name is /dev/centos/swap
 sudo sed -i 's/^\/dev\/mapper\/centos-swap/#\/dev\/mapper\/centos-swap/' /etc/fstab
 sudo swapoff /dev/mapper/centos-swap
-
 sudo yum install -y kubelet kubeadm kubectl --disableexcludes=kubernetes
-
 sudo systemctl enable --now kubelet
-
 # Set iptables bridging
-sudo cat <<EOF >  /etc/sysctl.d/k8s.conf
+sudo bash -c 'cat <<EOF >  /etc/sysctl.d/k8s.conf
 net.bridge.bridge-nf-call-ip6tables = 1
 net.bridge.bridge-nf-call-iptables = 1
-EOF
+EOF'
 sudo sysctl --system
 
-# Initialiase the cluster 
-sudo kubeadm init 
-# Create the config file for the user. 
-sudo mkdir -p $HOME/.kube
-sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
-kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
-kubeadm token create --print-join-command
 
