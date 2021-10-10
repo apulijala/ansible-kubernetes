@@ -1,14 +1,21 @@
-- name: hosts
-  hosts: kub_worker_1
-  become: true
-  tasks:
-    - debug:
-        msg: play1
-
-- name: Include a play after another play
-  import_playbook: prereqs1.yml 
-
-- name: Include a play after another play
-  import_playbook: install_docker_kub.yml
-
-
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp
+  labels:
+    name: myapp
+spec:
+  containers:
+  - name: mybusybox
+    image: busybox
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+  initContainers:
+  - name: init-myservice
+    image: busybox:1.28
+    command: ['sh', '-c', "until nslookup myservice; do echo waiting for myservice; sleep 2; done"]
+  - name: init-mydb
+    image: busybox:1.28
+    command: ['sh', '-c', "until nslookup mydb; do echo waiting for mydb; sleep 2; done"]
